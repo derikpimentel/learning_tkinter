@@ -134,6 +134,54 @@ class Application:
         )
         self.bold_button.grid(row=4, column=2)
 
+        self.container_check = Frame(self.master)
+        self.container_check.pack()
+
+        self.int_option = IntVar() # Variável Integer dinâmica
+
+        self.option_one = Checkbutton(self.container_check)
+        self.option_one["text"] = "Opção 1"
+        self.option_one["variable"] = self.int_option
+        self.option_one["command"] = self.check_states
+        self.option_one["bg"] = "light blue"
+        self.option_one["fg"] = "red"
+        self.option_one.grid(row=0, column=0)
+
+        self.bool_option = BooleanVar() # Variável Boolean dinâmica
+
+        self.option_two = Checkbutton(self.container_check)
+        self.option_two["text"] = "Opção 2"
+        self.option_two["variable"] = self.bool_option
+        self.option_two["command"] = self.check_states
+        self.option_two["font"] = ("Arial", 8, "bold")
+        self.option_two.grid(row=0, column=1)
+
+        self.str_option = StringVar() # Inicializa uma string VAZIA
+
+        self.option_three = Checkbutton(self.container_check)
+        self.option_three["text"] = "Opção 3"
+        self.option_three["variable"] = self.str_option
+        self.option_three["onvalue"] = "Ativado" # Valor quando marcado
+        self.option_three["offvalue"] = "Desativado" # Valor quando desmarcado
+        self.option_three["command"] = self.check_states
+        self.option_three.deselect() # Desmarca o Checkbutton
+        """
+        A string VAZIA (por padrão) marca o checkbutton. A menos que a 'offvalue' seja definida também como VAZIA ''.
+        """
+        self.option_three.grid(row=0, column=2)
+
+        self.allcheck_button = Button(self.container_check)
+        self.allcheck_button["text"] = "Marcar Todos"
+        self.allcheck_button["command"] = self.toggle_all_checks_together
+        self.allcheck_button["width"] = 15
+        self.allcheck_button.grid(row=1, column=0, columnspan=3)
+
+        self.togglecheck_button = Button(self.container_check)
+        self.togglecheck_button["text"] = "Alternar Marcadores"
+        self.togglecheck_button["command"] = self.toggle_all_checks
+        self.togglecheck_button["width"] = 15
+        self.togglecheck_button.grid(row=2, column=0, columnspan=3)
+
     # Função a ser executada ao clicar no botão
     def on_click(self):
         print("Botão pressionado!")
@@ -204,6 +252,31 @@ class Application:
         else:
             self.message.tag_remove("bold", "1.0", "1.end")
             self.bold_button.config(text="Negrito")
+
+    # Função que mostra os valores das variáveis dos checkbuttons
+    def check_states(self):
+        print(f"Opção 1: {self.int_option.get()}")
+        print(f"Opção 2: {self.bool_option.get()}")
+        print(f"Opção 3: {self.str_option.get()}")
+
+    # Função que marca\desmarca todos o checkbuttons
+    def toggle_all_checks_together(self):
+        if self.allcheck_button["text"] == "Marcar Todos":
+            self.option_one.select() # Marca o Checkbutton
+            self.option_two.select()
+            self.option_three.select()
+            self.allcheck_button.config(text="Desmarcar Todos")
+        else:
+            self.option_one.deselect()
+            self.option_two.deselect()
+            self.option_three.deselect()
+            self.allcheck_button.config(text="Marcar Todos")
+
+    # Função que alterna os marcadores
+    def toggle_all_checks(self):
+        self.option_one.toggle() # Alterna entre marcado\desmarcado
+        self.option_two.toggle()
+        self.option_three.toggle()
 
 # Estrutura de execução
 if __name__ == "__main__":
