@@ -182,6 +182,73 @@ class Application:
         self.togglecheck_button["width"] = 15
         self.togglecheck_button.grid(row=2, column=0, columnspan=3)
 
+        self.container_radio = Frame(self.master)
+        self.container_radio.pack()
+
+        self.str_radio = StringVar(value="Opção 1")
+
+        self.radio_one = Radiobutton(self.container_radio)
+        self.radio_one["text"] = "Opção 1"
+        self.radio_one["variable"] = self.str_radio
+        self.radio_one["value"] = "Opção 1"
+        self.radio_one.grid(row=0, column=0)
+
+        self.radio_two = Radiobutton(self.container_radio)
+        self.radio_two["text"] = "Opção 2"
+        self.radio_two["variable"] = self.str_radio
+        self.radio_two["value"] = "Opção 2"
+        self.radio_two.grid(row=0, column=1)
+
+        self.radio_three = Radiobutton(self.container_radio)
+        self.radio_three["text"] = "Opção 3"
+        self.radio_three["variable"] = self.str_radio
+        self.radio_three["value"] = "Opção 3"
+        self.radio_three.grid(row=0, column=2)
+
+        self.int_radio = IntVar()
+        self.int_radio.set(6) # Definido valor padrão
+
+        self.radio_four = Radiobutton(self.container_radio)
+        self.radio_four["text"] = "Opção 4"
+        self.radio_four["variable"] = self.int_radio
+        self.radio_four["value"] = 4
+        self.radio_four.grid(row=1, column=0)
+
+        self.radio_five = Radiobutton(self.container_radio)
+        self.radio_five["text"] = "Opção 5"
+        self.radio_five["variable"] = self.int_radio
+        self.radio_five["value"] = 5
+        self.radio_five.grid(row=1, column=1)
+
+        self.radio_six = Radiobutton(self.container_radio)
+        self.radio_six["text"] = "Opção 6"
+        self.radio_six["variable"] = self.int_radio
+        self.radio_six["value"] = 6
+        self.radio_six.grid(row=1, column=2)
+
+        self.default_radio = IntVar()
+
+        self.radio_seven = Radiobutton(self.container_radio)
+        self.radio_seven["text"] = "Debbug"
+        self.radio_seven["variable"] = self.default_radio
+        self.radio_seven["value"] = 1
+        self.radio_seven["command"] = self.start_debbug
+        self.radio_seven["bg"] = "lightgreen"
+        self.radio_seven["fg"] = "blue"
+        self.radio_seven["font"] = ("Arial", 12, "bold")
+        self.radio_seven.grid(row=2, column=0)
+
+        self.radio_eight = Radiobutton(self.container_radio)
+        self.radio_eight["text"] = "Reset"
+        self.radio_eight["variable"] = self.default_radio
+        self.radio_eight["value"] = 2
+        self.radio_eight["command"] = self.reset_debbug
+        self.radio_eight["bg"] = "lightgreen"
+        self.radio_eight["fg"] = "blue"
+        self.radio_eight["font"] = ("Arial", 12, "bold")
+        self.radio_eight["state"] = "disabled"
+        self.radio_eight.grid(row=2, column=2)
+
     # Função a ser executada ao clicar no botão
     def on_click(self):
         print("Botão pressionado!")
@@ -277,6 +344,20 @@ class Application:
         self.option_one.toggle() # Alterna entre marcado\desmarcado
         self.option_two.toggle()
         self.option_three.toggle()
+
+    # Função para debbug do radiobutton
+    def start_debbug(self):
+        print(f"""
+              As opções selecionadas foram 
+              {self.str_radio.get()} e {str(self.int_radio.get())}.
+        """)
+        self.radio_seven.config(state="disabled")
+        self.radio_eight.config(state="normal")
+
+    # Função para restaurar o debbug
+    def reset_debbug(self):
+        self.radio_seven.config(state="normal")
+        self.radio_eight.config(state="disabled")
 
 # Estrutura de execução
 if __name__ == "__main__":
