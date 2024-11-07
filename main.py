@@ -70,6 +70,70 @@ class Application:
         self.status_entry["state"] = "readonly" # Apenas leitura
         self.status_entry.grid(row=3, columnspan=2)
 
+        self.container_text = Frame(self.master)
+        self.container_text.pack()
+
+        self.message = Text(self.container_text, width=30, height=10)
+        self.message["wrap"] = "word" # Controla como o texto será quebrado ('char', 'word' e 'none')
+        self.message.insert("1.0", "Escreva sua mensagem...") # '1.0' representa a primeira linha e primeira coluna
+        self.message.config(state="disabled")
+        self.message.tag_config("bold", font=("Arial", 12, "bold")) # Criando TAG para negrito
+        self.message.grid(row=0, column=0, rowspan=5, sticky="nsew")
+        """
+        Expande o Text nas direções 'n' norte, 's' sul, 'e' leste e 'w' oeste.
+        """
+        #img = PhotoImage(file="img.png")
+        #self.message.image_create("insert", image=img) # Insere imagem na posição do cursor
+
+        # Cria uma barra de rolagem para associar a caixa de mensagem
+        self.scrollbar = Scrollbar(self.container_text, command=self.message.yview)
+        self.scrollbar.grid(row=0, column=1, rowspan=5, sticky="ns")
+        """
+        Expande o Scrollbar nas direções norte e sul
+        """
+
+        self.message.config(yscrollcommand=self.scrollbar.set) # Integra a Scrollbar na Text
+
+        # Ajustando o redimensionamento das colunas e linhas
+        self.container_text.grid_rowconfigure(0, weight=1) # Permite expandir a linha 0
+        self.container_text.grid_columnconfigure(0, weight=1) # Permite expandir a coluna 0
+
+        self.delete_button = Button(
+            self.container_text, 
+            text="Apagar Mensagem", 
+            command=self.delete_message,
+            state="disabled",
+            width=15
+        )
+        self.delete_button.grid(row=1, column=2)
+
+        self.send_button = Button(
+            self.container_text, 
+            text="Enviar Mensagem", 
+            command=self.send_message,
+            state="disabled",
+            width=15
+        )
+        self.send_button.grid(row=2, column=2)
+
+        self.cursor_button = Button(
+            self.container_text,
+            text="Ir para o Início",
+            command=self.position_cursor,
+            state="disabled",
+            width=15
+        )
+        self.cursor_button.grid(row=3, column=2)
+
+        self.bold_button = Button(
+            self.container_text,
+            text="Negrito",
+            command=self.bold_text,
+            state="disabled",
+            width=15
+        )
+        self.bold_button.grid(row=4, column=2)
+
     # Função a ser executada ao clicar no botão
     def on_click(self):
         print("Botão pressionado!")
@@ -99,9 +163,47 @@ class Application:
             self.login_entry.insert(0, "Usuário")
             self.key_entry.delete(0, "end")
             self.key_entry.insert(0, "Senha")
+            self.message.config(state="normal")
+            self.delete_button.config(state="normal")
+            self.send_button.config(state="normal")
+            self.cursor_button.config(state="normal")
+            self.bold_button.config(state="normal")
         else:
             print("Falha de conexão!")
             self.status_con.set("Usuário e/ou senha incorretos!")
+            self.message.config(state="disabled")
+            self.delete_button.config(state="disabled")
+            self.send_button.config(state="disabled")
+            self.cursor_button.config(state="disabled")
+            self.bold_button.config(state="disabled")
+
+    # Função para deletar a mensagem
+    def delete_message(self):
+        self.message.delete("1.0", "end") # Remove o texto do início ao fim
+        self.message.insert("1.0", "Escreva sua mensagem...")
+
+    # Função para TESTAR um envio de mensagem
+    def send_message(self):
+        message = self.message.get("1.0", "end") # Pega o texto do início ao fim
+        print(f"A mensagem enviado foi:\n''\n    {message}''")
+
+    # Função que alterna o posicionamento do cursor
+    def position_cursor(self):
+        if self.cursor_button["text"] == "Ir para o Início":
+            self.message.mark_set("insert", "1.0")
+            self.cursor_button.config(text="Ir para o Final")
+        else:
+            self.message.mark_set("insert", "end")
+            self.cursor_button.config(text="Ir para o Início")
+
+    # Função que alterna o estilo do texto
+    def bold_text(self):
+        if self.bold_button["text"] == "Negrito":
+            self.message.tag_add("bold", "1.0", "1.end")
+            self.bold_button.config(text="Normal")
+        else:
+            self.message.tag_remove("bold", "1.0", "1.end")
+            self.bold_button.config(text="Negrito")
 
 # Estrutura de execução
 if __name__ == "__main__":
