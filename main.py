@@ -249,6 +249,60 @@ class Application:
         self.radio_eight["state"] = "disabled"
         self.radio_eight.grid(row=2, column=2)
 
+        self.container_listbox = Frame(self.master)
+        self.container_listbox.pack()
+
+        self.listbox = Listbox(self.container_listbox)
+        self.listbox["selectmode"] = "browse" # Tipo de seleção
+        """
+        Outros 'selectmode':
+        'browse': (padrão) seleção simples
+        'single': também para seleção simples, mas não permite navegação com o mouse.
+        'multiple': permite que o usuário selecione múltiplos itens, clicando em cada um.
+        'extended': permite selecionar múltiplos itens com SHIFT (para selecionar uma faixa) 
+            ou CTRL (para selecionar individualmente).
+        """
+        self.listbox.insert(0, "Item 1") # Insere no começo da lista
+        self.listbox.insert(END, "Item 2") # Insere no final da lista
+        self.listbox.insert(END, "Item 3")
+        self.listbox.insert(0, "Item 4")
+        self.listbox.insert(1, "Item 5") # Insere pelo indíce da lista
+        self.listbox["bg"] = "black"
+        self.listbox["fg"] = "white"
+        self.listbox["font"] = ("Arial", 10, "bold")
+        self.listbox["width"] = 20
+        self.listbox["height"] = 10
+        self.listbox.grid(row=0, column=0, rowspan=4, sticky="nsew")
+
+        self.scrollbar_to_listbox = Scrollbar(self.container_listbox)
+        self.listbox.config(yscrollcommand=self.scrollbar_to_listbox.set)
+        self.scrollbar_to_listbox.config(command=self.listbox.yview)
+        self.scrollbar_to_listbox.grid(row=0, column=1, rowspan=4, sticky="ns")
+
+        self.container_listbox.grid_rowconfigure(0, weight=1)
+        self.container_listbox.grid_columnconfigure(0, weight=1)
+
+        self.item_entry = Entry(self.container_listbox)
+        self.item_entry.grid(row=0, column=2)
+
+        self.insert_item_btn = Button(self.container_listbox)
+        self.insert_item_btn["text"] = "Adicionar item"
+        self.insert_item_btn["command"] = self.insert_list_item
+        self.insert_item_btn["width"] = 15
+        self.insert_item_btn.grid(row=1, column=2)
+
+        self.delete_item_btn = Button(self.container_listbox)
+        self.delete_item_btn["text"] = "Remover item"
+        self.delete_item_btn["command"] = self.delete_list_item
+        self.delete_item_btn["width"] = 15
+        self.delete_item_btn.grid(row=2, column=2)
+
+        self.delete_all_btn = Button(self.container_listbox)
+        self.delete_all_btn["text"] = "Remover todos"
+        self.delete_all_btn["command"] = self.delete_all_list_itens
+        self.delete_all_btn["width"] = 15
+        self.delete_all_btn.grid(row=3, column=2)
+
     # Função a ser executada ao clicar no botão
     def on_click(self):
         print("Botão pressionado!")
@@ -358,6 +412,25 @@ class Application:
     def reset_debbug(self):
         self.radio_seven.config(state="normal")
         self.radio_eight.config(state="disabled")
+
+    # Função que insere um novo item a lista
+    def insert_list_item(self):
+        item = self.item_entry.get()
+        if item != '':
+            self.listbox.insert(END, item)
+            self.item_entry.delete(0, END)
+
+    # Função que remove os itens selecionados da lista
+    def delete_list_item(self):
+        selected = self.listbox.curselection() # Obtém os indíces selecionados
+        # Percorre a lista de forma inversa, para evitar erro ao remover múltiplos itens
+        for index in reversed(selected): 
+            print(f"O item excluído foi {self.listbox.get(index)}")
+            self.listbox.delete(index)
+    
+    # Função que apaga todos os itens
+    def delete_all_list_itens(self):
+        self.listbox.delete(0, END)
 
 # Estrutura de execução
 if __name__ == "__main__":
