@@ -303,6 +303,33 @@ class Application:
         self.delete_all_btn["width"] = 15
         self.delete_all_btn.grid(row=3, column=2)
 
+        self.container_scale = Frame(self.master)
+        self.container_scale.pack()
+
+        self.v_scale = Scale(self.container_scale)
+        self.v_scale["from_"] = 0
+        self.v_scale["to"] = 1
+        self.v_scale["resolution"] = 0.01 # Define o passo
+        self.v_scale.set(0.5)
+        self.v_scale["length"] = 50 # Comprimento em pixels
+        self.v_scale["sliderlength"] = 10 # Comprimento do botão em pixels
+        self.v_scale["bg"] = "lightblue"
+        self.v_scale["fg"] = "red"
+        self.v_scale["showvalue"] = False # Define se o valor atual é exibido
+        #self.v_scale["state"] = "disabled"
+        self.v_scale["troughcolor"] = "black" # Define cor de fundo da barra
+        self.v_scale.grid(row=0, column=0)
+
+        self.h_scale = Scale(self.container_scale)
+        self.h_scale["from_"] = 0
+        self.h_scale["to"] = 100
+        self.h_scale["orient"] = "horizontal" # Define o posicionamento
+        self.h_scale["command"] = self.update_scale_value
+        self.h_scale["label"] = "Escala" # Define um rótulo
+        self.h_scale["length"] = 200
+        self.h_scale["tickinterval"] = 20 # Define intervalo entre marcas
+        self.h_scale.grid(row=0, column=1)
+
     # Função a ser executada ao clicar no botão
     def on_click(self):
         print("Botão pressionado!")
@@ -431,6 +458,11 @@ class Application:
     # Função que apaga todos os itens
     def delete_all_list_itens(self):
         self.listbox.delete(0, END)
+
+    # Função que mostra o valor atual da barra
+    def update_scale_value(self, value): # 'value' recebe valor do 'lambda'
+        #print(self.h_scale.get())
+        print("Valor atual: ", value)
 
 # Estrutura de execução
 if __name__ == "__main__":
