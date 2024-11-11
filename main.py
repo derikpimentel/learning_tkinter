@@ -4,12 +4,13 @@ from tkinter import *
 class Application:
     def __init__(self, master=None):
         self.master = master # Faz a passagem da variável "root"
+        self.submaster = None # Variável de rastreio da sub janela
 
         self.menu_bar = Menu(self.master) # Cria um menu
         self.menu_file = Menu(self.menu_bar, tearoff=0) # Cria um menu suspenso
         # Criando itens do menu suspenso
-        self.menu_file.add_command(label="Novo", command=lambda: print("Novo arquivo"))
-        self.menu_file.entryconfig("Novo", state="disabled")
+        self.menu_file.add_command(label="Novo", command=self.new_window)
+        #self.menu_file.entryconfig("Novo", state="disabled")
         self.menu_file.add_command(label="Abrir", command=lambda: print("Abrir arquivo"))
         self.menu_file.add_separator() # Acrescenta um separador
         self.menu_import = Menu(self.menu_file, tearoff=0)
@@ -525,6 +526,37 @@ class Application:
     # Função que mosta o valor atual do spinbox
     def update_spinbox_value(self):
         print(f"Valor atual {self.volume.get()}")
+
+    # Função que cria uma nova janela
+    def new_window(self):
+        # Função de fechamento
+        def exit():
+            print("Janela fechada!")
+            self.submaster.destroy() # Fecha a janela
+
+        # Verifica se a janela já está aberta
+        if self.submaster is None or not self.submaster.winfo_exists():
+
+            # Cria uma janela independente
+            self.submaster = Toplevel(self.master)
+            self.submaster.title("Nova janela") # Define o título
+            self.submaster.geometry("300x200") # Define o tamanho
+            self.submaster.configure(bg="lightblue") # Define a cor de fundo
+            # Executa um comando, ao interceptar o comando de fechamento
+            self.submaster.protocol("WM_DELETE_WINDOW", exit)
+            # Desabilita o redimensionamento da janela
+            self.submaster.resizable(False, False)
+
+            Label(self.submaster, text="Esta é uma nova janela!").pack()
+
+            # CONFIGURAÇÃO DE JANELA MODAL
+            # Captura os eventos apenas para a janela atual
+            self.submaster.grab_set()
+            # Pausa a janela princial até que feche a janela atual
+            self.master.wait_window(self.submaster)
+
+        else:
+            self.submaster.lift() # Trás a janela para o topo
 
 # Estrutura de execução
 if __name__ == "__main__":
