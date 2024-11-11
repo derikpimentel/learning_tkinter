@@ -5,6 +5,27 @@ class Application:
     def __init__(self, master=None):
         self.master = master # Faz a passagem da variável "root"
 
+        self.menu_bar = Menu(self.master) # Cria um menu
+        self.menu_file = Menu(self.menu_bar, tearoff=0) # Cria um menu suspenso
+        # Criando itens do menu suspenso
+        self.menu_file.add_command(label="Novo", command=lambda: print("Novo arquivo"))
+        self.menu_file.entryconfig("Novo", state="disabled")
+        self.menu_file.add_command(label="Abrir", command=lambda: print("Abrir arquivo"))
+        self.menu_file.add_separator() # Acrescenta um separador
+        self.menu_import = Menu(self.menu_file, tearoff=0)
+        self.menu_import.add_command(label="Importar imagem")
+        self.menu_import.add_command(label="Importar vídeo")
+        self.menu_file.add_cascade(label="Importar", menu=self.menu_import)
+        self.menu_file.add_separator()
+        self.menu_file.add_checkbutton(label="Opção avançada")
+        self.menu_file.add_radiobutton(label="Modo 1")
+        self.menu_file.add_radiobutton(label="Modo 2")
+        self.menu_file.add_separator()
+        self.menu_file.add_command(label="Sair", command=self.master.quit)
+        # Acrescenta o menu suspenso ao menu principal
+        self.menu_bar.add_cascade(label="Arquivo", menu=self.menu_file)
+        self.master.config(menu=self.menu_bar) # Insere o menu na janela
+
         self.container_left = Frame(self.master)
         self.container_left["bg"] = "lightyellow"
         self.container_left["relief"] = "groove" # Estilo de borda
