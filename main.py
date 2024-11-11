@@ -330,6 +330,31 @@ class Application:
         self.h_scale["tickinterval"] = 20 # Define intervalo entre marcas
         self.h_scale.grid(row=0, column=1)
 
+        self.container_spinbox = Frame(self.master)
+        self.container_spinbox.pack()
+
+        self.value_volume = IntVar()
+
+        self.volume = Spinbox(self.container_spinbox)
+        self.volume["from_"] = 0
+        self.volume["to"] = 10
+        self.volume["increment"] = 0.5 # Define o passo
+        self.volume["textvariable"] = self.value_volume
+        self.value_volume.set(5.0)
+        self.volume["command"] = self.update_spinbox_value
+        self.volume["width"] = 10
+        self.volume.grid(row=0, column=0)
+
+        self.day_of_the_week = Spinbox(self.container_spinbox)
+        # Define os valores
+        self.day_of_the_week["values"] = ("Segunda", "Terça", "Quarta", "Quinta", "Sexta")
+        self.day_of_the_week["width"] = 10
+        self.day_of_the_week["font"] = ("Arial", 12)
+        self.day_of_the_week["bg"] = "lightyellow"
+        self.day_of_the_week["fg"] = "blue"
+        #self.day_of_the_week["state"] = "disabled"
+        self.day_of_the_week.grid(row=0, column=1)
+
     # Função a ser executada ao clicar no botão
     def on_click(self):
         print("Botão pressionado!")
@@ -463,6 +488,10 @@ class Application:
     def update_scale_value(self, value): # 'value' recebe valor do 'lambda'
         #print(self.h_scale.get())
         print("Valor atual: ", value)
+
+    # Função que mosta o valor atual do spinbox
+    def update_spinbox_value(self):
+        print(f"Valor atual {self.volume.get()}")
 
 # Estrutura de execução
 if __name__ == "__main__":
