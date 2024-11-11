@@ -5,7 +5,16 @@ class Application:
     def __init__(self, master=None):
         self.master = master # Faz a passagem da variável "root"
 
-        self.label = Label(self.master) # Cria uma Label
+        self.container_left = Frame(self.master)
+        self.container_left["bg"] = "lightyellow"
+        self.container_left["relief"] = "groove" # Estilo de borda
+        """
+        Estilos de borda: 'flat', 'sunken', 'raised', 'groove' ou 'ride'
+        """
+        self.container_left["bd"] = 2 # Espessura de borda
+        self.container_left.pack(side="left", padx=10, pady=10)
+
+        self.label = Label(self.container_left) # Cria uma Label
         self.label["text"] = "Olá, mundo!" # Define o texto a ser exibido
         self.label["font"] = ("Arial", 12, "bold") # Altera a fonte do texto
         self.label["bg"] = "black" # Define a cor de fundo
@@ -18,7 +27,7 @@ class Application:
         #self.label["image"] = image # Define uma imagem a ser exibida
         self.label.pack() # Posiciona o Label na janela (forma simples)
 
-        self.button = Button(self.master) # Cria um Button
+        self.button = Button(self.container_left) # Cria um Button
         self.button["text"] = "Clique Aqui!"
         self.button["command"] = self.on_click # Função a ser chamada quando clicado
         self.button["state"] = "normal" # Define o estado do botão ('normal', 'disabled' e 'active')
@@ -36,7 +45,7 @@ class Application:
         self.button.pack()
 
         # Criando um container para posicionar os widgets com grid()
-        self.container_entry = Frame(self.master)
+        self.container_entry = Frame(self.container_left)
         self.container_entry.pack()
 
         """ Campo de entrada de texto com linha única """
@@ -70,7 +79,7 @@ class Application:
         self.status_entry["state"] = "readonly" # Apenas leitura
         self.status_entry.grid(row=3, columnspan=2)
 
-        self.container_text = Frame(self.master)
+        self.container_text = Frame(self.container_left)
         self.container_text.pack()
 
         self.message = Text(self.container_text, width=30, height=10)
@@ -134,7 +143,10 @@ class Application:
         )
         self.bold_button.grid(row=4, column=2)
 
-        self.container_check = Frame(self.master)
+        self.container_right = Frame(self.master)
+        self.container_right.pack(side="right", padx=10, pady=10)
+
+        self.container_check = Frame(self.container_right)
         self.container_check.pack()
 
         self.int_option = IntVar() # Variável Integer dinâmica
@@ -182,7 +194,7 @@ class Application:
         self.togglecheck_button["width"] = 15
         self.togglecheck_button.grid(row=2, column=0, columnspan=3)
 
-        self.container_radio = Frame(self.master)
+        self.container_radio = Frame(self.container_right)
         self.container_radio.pack()
 
         self.str_radio = StringVar(value="Opção 1")
@@ -249,7 +261,7 @@ class Application:
         self.radio_eight["state"] = "disabled"
         self.radio_eight.grid(row=2, column=2)
 
-        self.container_listbox = Frame(self.master)
+        self.container_listbox = Frame(self.container_right)
         self.container_listbox.pack()
 
         self.listbox = Listbox(self.container_listbox)
@@ -303,7 +315,7 @@ class Application:
         self.delete_all_btn["width"] = 15
         self.delete_all_btn.grid(row=3, column=2)
 
-        self.container_scale = Frame(self.master)
+        self.container_scale = Frame(self.container_right)
         self.container_scale.pack()
 
         self.v_scale = Scale(self.container_scale)
@@ -330,7 +342,7 @@ class Application:
         self.h_scale["tickinterval"] = 20 # Define intervalo entre marcas
         self.h_scale.grid(row=0, column=1)
 
-        self.container_spinbox = Frame(self.master)
+        self.container_spinbox = Frame(self.container_right)
         self.container_spinbox.pack()
 
         self.value_volume = IntVar()
