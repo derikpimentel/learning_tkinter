@@ -1,4 +1,5 @@
 from tkinter import *
+from submain import Subapplication # Importa a janela de outro arquivo
 
 # Estrutura da aplicação
 class Application:
@@ -11,7 +12,7 @@ class Application:
         # Criando itens do menu suspenso
         self.menu_file.add_command(label="Novo", command=self.new_window)
         #self.menu_file.entryconfig("Novo", state="disabled")
-        self.menu_file.add_command(label="Abrir", command=lambda: print("Abrir arquivo"))
+        self.menu_file.add_command(label="Abrir", command=self.open_window)
         self.menu_file.add_separator() # Acrescenta um separador
         self.menu_import = Menu(self.menu_file, tearoff=0)
         self.menu_import.add_command(label="Importar imagem")
@@ -557,6 +558,15 @@ class Application:
 
         else:
             self.submaster.lift() # Trás a janela para o topo
+
+    # Função para abrir uma janela de arquivo externo
+    def open_window(self):
+        if self.submaster is None or not self.submaster.winfo_exists():
+            self.submaster = Toplevel(self.master)
+            Subapplication(self.submaster)
+
+        else:
+            self.submaster.lift()
 
 # Estrutura de execução
 if __name__ == "__main__":
