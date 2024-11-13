@@ -56,3 +56,12 @@ class Subapplication:
         self.right_label["text"] = "Painel direito"
         self.right_label["bg"] = "lightgreen"
         self.h_paned.add(self.right_label, minsize=100)
+
+        # Cria um Message
+        self.message = Message(self.master)
+        self.message["text"] = "Este é um texto mais longo que será automaticamente ajustado para se encaixar no widget Message."
+        self.message["width"] = 200
+        self.message["font"] = ("Arial", 10, "italic")
+        self.message["bg"] = "white"
+        self.message["fg"] = "blue"
+        self.message.pack()
