@@ -1,4 +1,7 @@
+import time
+import threading # Para execução de tarefas em segundo plano (execução simultânea)
 from tkinter import *
+from tkinter.ttk import Progressbar
 from submain import Subapplication # Importa a janela de outro arquivo
 
 # Estrutura da aplicação
@@ -10,6 +13,8 @@ class Application:
         self.menu_bar = Menu(self.master) # Cria um menu
         self.menu_file = Menu(self.menu_bar, tearoff=0) # Cria um menu suspenso
         # Criando itens do menu suspenso
+        self.menu_file.add_command(label="Enviar", command=self.send_file)
+        self.menu_file.add_separator()
         self.menu_file.add_command(label="Novo", command=self.new_window)
         #self.menu_file.entryconfig("Novo", state="disabled")
         self.menu_file.add_command(label="Abrir", command=self.open_window)
@@ -567,6 +572,59 @@ class Application:
 
         else:
             self.submaster.lift()
+
+    # Cria uma nova janela de carregamento
+    def send_file(self):
+        progress_window = Toplevel(self.master)
+        # Cria uma Progressbar (barra de progresso)
+        self.progressbar_one = Progressbar(progress_window)
+        self.progressbar_one["orient"] = "horizontal"
+        self.progressbar_one["length"] = 200
+        self.progressbar_one["mode"] = "indeterminate" # Define um modo
+        self.progressbar_one.pack(padx=10, pady=10)
+        self.progressbar_one.start(10) # Executa a barra de progresso (milissegundos)
+
+        self.progress_btn = Button(progress_window)
+        self.progress_btn["text"] = "Parar"
+        self.progress_btn["command"] = self.update_progress
+        self.progress_btn.pack(padx=10, pady=10)
+
+        self.progressbar_two = Progressbar(progress_window)
+        self.progressbar_two["orient"] = "horizontal"
+        self.progressbar_two["length"] = 200 # Comprimento em pixels
+        self.progressbar_two["mode"] = "determinate"
+        self.progressbar_two["maximum"] = 100 # Define o máximo (Por padrão é 100)
+        # Executa um comando após um período de tempo (milissegundos,)
+        self.progressbar_two.after(3000, self.start_task)
+        self.progressbar_two.pack(padx=10, pady=10)
+
+        progress_btn = Button(progress_window) 
+        progress_btn["text"] = "Iniciar"
+        progress_btn["command"] = self.start_task
+        progress_btn.pack(padx=10, pady=10)
+        
+    # Função que controla inicio e parada
+    def update_progress(self):
+        if self.progress_btn["text"] == "Parar":
+            self.progressbar_one.stop() # Parar a barra de progresso
+            self.progress_btn["text"] = "Iniciar"
+        else:
+            self.progressbar_one.start(10)
+            self.progress_btn["text"] = "Parar"
+
+    # Função para iniciar a tarefa em uma nova thread
+    def start_task(self):
+        # Cria e inicia a thread para executar a tarefa sem bloquear a interface
+        thread = threading.Thread(target=self.start_progress)
+        thread.start()
+
+    # Função que simula um carregamento
+    def start_progress(self):
+        for i in range(100): # range() cria uma lista de valores de 0 até (n-1)
+            #self.progressbar_two["value"] = i
+            self.progressbar_two.step(1.0) # Define um passo de incremento (FLOAT)
+            self.progressbar_two.update_idletasks() # Atualiza a interface (GUI)
+            time.sleep(0.05) # Cria uma pausa (segundos)
 
 # Estrutura de execução
 if __name__ == "__main__":
